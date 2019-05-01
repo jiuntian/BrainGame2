@@ -6,8 +6,11 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -18,7 +21,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-import java.awt.*;
 import java.io.FileInputStream;
 import java.net.URI;
 import java.util.ArrayList;
@@ -31,17 +33,44 @@ public class Controller{
     static Text[][] t;
     static ImageView[][] wrong;
     ArrayList<Circle> nodes = new ArrayList<>();
+
     Text descriptionText;
     Text informationText;
+
     Image image = new Image(this.getClass().getClassLoader().getResource("wrong.png").toString());
     ImageView imageView = new ImageView(image);
+
+    TextField textField;
+    TextField textField2;
+
     public Vertex[] init(Pane root){
         Vertex[] a = inputGraph(root);
+
+        Label label1 = new Label("From:\t");
+        textField = new TextField ();
+        textField.setMaxWidth(25);
+        HBox from = new HBox();
+        from.getChildren().addAll(label1, textField);
+        from.setSpacing(10);
+        from.setLayoutX(20);
+        from.setLayoutY(105);
+
+        Label label2 = new Label("Dest:\t");
+        textField2 = new TextField ();
+        textField2.setMaxWidth(25);
+        HBox to = new HBox();
+        to.getChildren().addAll(label2, textField2);
+        to.setSpacing(10);
+        to.setLayoutX(20);
+        to.setLayoutY(145);
+
         Button button = new Button("Make Search");
+        button.setLayoutY(180.0);
+        button.setLayoutX(20);
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                inputQuery(a, root);
+                inputQuery(a);
             }
         });
         descriptionText = new Text();
@@ -55,7 +84,7 @@ public class Controller{
         informationText.setFill(Color.BLACK);
         informationText.setX(20);
         informationText.setY(60);
-        root.getChildren().addAll(button, descriptionText, informationText);
+        root.getChildren().addAll(button, from, to, descriptionText, informationText);
         return a;
     }
 
@@ -156,46 +185,56 @@ public class Controller{
             root.getChildren().add(0, wrong[u][v]);
     }
 
-    public void inputQuery(Vertex[] graph, Pane root){
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter number of query");
-        int x = sc.nextInt();
-        for(int i=0;i<x;i++){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    singleQuery(graph, root);
-                }
-            }).start();
-        }
+    public void inputQuery(Vertex[] graph){
+//        Scanner sc = new Scanner(System.in);
+//        System.out.println("Enter number of query");
+//        int x = sc.nextInt();
+//        for(int i=0;i<x;i++){
+//            new Thread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    singleQuery(graph, root);
+//                }
+//            }).start();
+//        }
+        singleQuery(graph);
     }
-    public void singleQuery(Vertex[] graph, Pane root){
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter source and destination(s d):");
-        int src = sc.nextInt()-1;
-        int des = sc.nextInt()-1;
-        List<Vertex> path = new Solution().calc(graph[src], graph[des]);
-        final Timeline timeline = new Timeline();
-        timeline.setCycleCount(1);
-        String text = "Path: ";
-        String info = "";
-        for(Vertex location:path) {
-            int loc = Integer.valueOf(location.getName());
-            text += " -> "+loc;
-            timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), new KeyValue(nodes.get(loc - 1).fillProperty(), Color.YELLOW)));
+    public void singleQuery(Vertex[] graph){
+//        Scanner sc = new Scanner(System.in);
+//        System.out.println("Enter source and destination(s d):");
+//        int src = sc.nextInt()-1;
+//        int des = sc.nextInt()-1;
+        //GUI input
+        if(!textField.getText().equals("")&&!textField2.getText().equals("")) {
+            int srcInput = new Integer(textField.getText());
+            int desInput = new Integer(textField2.getText());
+            int src = srcInput - 1;
+            int des = desInput - 1;
+            List<Vertex> path = new Solution().calc(graph[src], graph[des]);
+
+            //animation
+            final Timeline timeline = new Timeline();
+            timeline.setCycleCount(1);
+            String text = "Path: ";
+            String info = "";
+            for (Vertex location : path) {
+                int loc = Integer.valueOf(location.getName());
+                text += " -> " + loc;
+                timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), new KeyValue(nodes.get(loc - 1).fillProperty(), Color.YELLOW)));
+            }
+            //If no path available
+            if (path.size() == 0)
+                text = "No Path Available";
+            else
+                info = "Time Needed: " + path.get(path.size() - 1).getTime() + "\nDistance Travelled: " + path.get(path.size() - 1).getDistance();
+            for (Circle circle : nodes) {
+                circle.setFill(Color.GRAY);//reset back to original color
+            }
+            descriptionText.setText(text);
+            informationText.setText(info);
+            timeline.play();
+            resetPara(graph);
         }
-        //If no path available
-        if(path.size()==0)
-            text = "No Path Available";
-        else
-            info = "Time Needed: "+path.get(path.size()-1).getTime() +"\nDistance Travelled: "+ path.get(path.size()-1).getDistance();
-        for(Circle circle:nodes){
-            circle.setFill(Color.GRAY);//reset back to original color
-        }
-        descriptionText.setText(text);
-        informationText.setText(info);
-        timeline.play();
-        resetPara(graph);
     }
 
     private static void resetPara(Vertex... graph){
