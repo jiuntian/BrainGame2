@@ -22,7 +22,9 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Controller{
-    Line[][] line;
+    static Line[][] line;
+    static Polygon[][] arrowHead;
+    static Text[][] t;
     ArrayList<Circle> nodes = new ArrayList<>();
     Text descriptionText;
     Text informationText;
@@ -118,20 +120,20 @@ public class Controller{
         line[u][v].setEndY(circleV.getCenterY());
         line[u][v].setStrokeWidth(3);
 
-        Text t = new Text(weight);
+        t[u][v] = new Text(weight);
         double arrowAngle = (Math.atan2(line[u][v].getEndY() - line[u][v].getStartY(), line[u][v].getEndX() - line[u][v].getStartX()));
-        t.setLayoutX((line[u][v].getEndX() - line[u][v].getStartX()) / 2 + line[u][v].getStartX());
-        t.setLayoutY((line[u][v].getEndY() - line[u][v].getStartY()) / 2 + line[u][v].getStartY());
-        t.setFont(Font.font("verdana",FontWeight.EXTRA_BOLD,17));
-        t.setFill(Color.LIGHTCORAL);
+        t[u][v].setLayoutX((line[u][v].getEndX() - line[u][v].getStartX()) / 2 + line[u][v].getStartX());
+        t[u][v].setLayoutY((line[u][v].getEndY() - line[u][v].getStartY()) / 2 + line[u][v].getStartY());
+        t[u][v].setFont(Font.font("verdana",FontWeight.EXTRA_BOLD,17));
+        t[u][v].setFill(Color.LIGHTCORAL);
         double scale = 2.5;
-        Polygon arrowHead = new Polygon(-4.33 * scale, 2.5 * scale, 5.0 * scale, 0, -4.33 * scale, -2.5 * scale, -4.33 * scale, 2.5 * scale);
-        arrowHead.setRotate(Math.toDegrees(arrowAngle));
-        arrowHead.setLayoutX(line[u][v].getEndX() - 20 * Math.cos(arrowAngle));
-        arrowHead.setLayoutY(line[u][v].getEndY() - 20 * Math.sin(arrowAngle));
-        arrowHead.setFill(line[u][v].getStroke());
-        root.getChildren().add(0, t);
-        root.getChildren().add(0, arrowHead);
+        arrowHead[u][v] = new Polygon(-4.33 * scale, 2.5 * scale, 5.0 * scale, 0, -4.33 * scale, -2.5 * scale, -4.33 * scale, 2.5 * scale);
+        arrowHead[u][v].setRotate(Math.toDegrees(arrowAngle));
+        arrowHead[u][v].setLayoutX(line[u][v].getEndX() - 20 * Math.cos(arrowAngle));
+        arrowHead[u][v].setLayoutY(line[u][v].getEndY() - 20 * Math.sin(arrowAngle));
+        arrowHead[u][v].setFill(line[u][v].getStroke());
+        root.getChildren().add(0, t[u][v]);
+        root.getChildren().add(0, arrowHead[u][v]);
         root.getChildren().add(0, line[u][v]);
     }
 
@@ -160,7 +162,7 @@ public class Controller{
         String info = "";
         for(Vertex location:path) {
             int loc = Integer.valueOf(location.getName());
-            text+= " -> "+loc;
+            text += " -> "+loc;
             timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), new KeyValue(nodes.get(loc - 1).fillProperty(), Color.YELLOW)));
         }
         //If no path available
@@ -178,11 +180,11 @@ public class Controller{
     }
 
     private static void resetPara(Vertex... graph){
-        for (int i = 0; i < graph.length; i++) {
-            graph[i].setTime(Integer.MAX_VALUE);
-            graph[i].setDistance(Integer.MAX_VALUE);
-            graph[i].setVisited(false);
-            graph[i].setPredecessor(null);
+        for (Vertex vertex : graph) {
+            vertex.setTime(Integer.MAX_VALUE);
+            vertex.setDistance(Integer.MAX_VALUE);
+            vertex.setVisited(false);
+            vertex.setPredecessor(null);
         }
     }
 }

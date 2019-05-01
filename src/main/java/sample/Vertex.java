@@ -26,18 +26,20 @@ public class Vertex implements Comparable<Vertex> {
         return this.adjacenciesList;
     }
 
-    public void decreaseSynapseLifetime(Vertex source, Vertex target){
-        int i=0;
+    public void decreaseSynapseLifetime(Vertex source, Vertex target, int u, int v){
         for(Edge synapse: getNeighbour()){
             if(synapse.getTargetVertex()==target && synapse.getStartVertex()==source){
-                System.out.println("Found it to decrease");
+                //System.out.println("Pass one time, decrease lifetime");
                 synapse.decreaseLife();
-                if(synapse.getLife()==0){
-                    System.out.println("delete the node");
-                    synapse.setTime(Integer.MIN_VALUE);
+                if(synapse.getLife()<=0){
+                    System.out.println("Node died");
+                    Controller.line[u][v].setVisible(false);
+                    Controller.t[u][v].setVisible(false);
+                    Controller.arrowHead[u][v].setVisible(false);
+                    synapse.setTime(Integer.MIN_VALUE);//disabled the synapse
+
                 }
             }
-            i++;
         }
     }
 
