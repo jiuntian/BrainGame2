@@ -6,6 +6,8 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -16,7 +18,9 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-import java.sql.SQLOutput;
+import java.awt.*;
+import java.io.FileInputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -25,9 +29,12 @@ public class Controller{
     static Line[][] line;
     static Polygon[][] arrowHead;
     static Text[][] t;
+    static ImageView[][] wrong;
     ArrayList<Circle> nodes = new ArrayList<>();
     Text descriptionText;
     Text informationText;
+    Image image = new Image(this.getClass().getClassLoader().getResource("wrong.png").toString());
+    ImageView imageView = new ImageView(image);
     public Vertex[] init(Pane root){
         Vertex[] a = inputGraph(root);
         Button button = new Button("Make Search");
@@ -77,6 +84,9 @@ public class Controller{
             root.getChildren().addAll(circle, text);
         }
         line = new Line[neuron.length][neuron.length];
+        arrowHead = new Polygon[neuron.length][neuron.length];
+        t = new Text[neuron.length][neuron.length];
+        wrong = new ImageView[neuron.length][neuron.length];
 
         for(int i=0;i<nodes.size();i++){
             Circle circle = nodes.get(i);
@@ -102,7 +112,7 @@ public class Controller{
                     life = sc.nextInt();
                 }
                 neuron[i].addNeighbour(new Edge(dist, neuron[i],neuron[nextNeuron],time,life));
-                addEdge(root, i, nextNeuron, ""+dist+","+time);
+                addEdge(root, i, nextNeuron,"Time: "+time+"\nDist: "+dist + "\nLife: "+life);
             }
         }
         return neuron;
@@ -122,10 +132,17 @@ public class Controller{
 
         t[u][v] = new Text(weight);
         double arrowAngle = (Math.atan2(line[u][v].getEndY() - line[u][v].getStartY(), line[u][v].getEndX() - line[u][v].getStartX()));
-        t[u][v].setLayoutX((line[u][v].getEndX() - line[u][v].getStartX()) / 2 + line[u][v].getStartX());
-        t[u][v].setLayoutY((line[u][v].getEndY() - line[u][v].getStartY()) / 2 + line[u][v].getStartY());
+        int onLeft = (v>u)? -90 : 0;
+        t[u][v].setLayoutX((line[u][v].getEndX() - line[u][v].getStartX()) / 2 + line[u][v].getStartX()+onLeft);
+        t[u][v].setLayoutY((line[u][v].getEndY() - line[u][v].getStartY()) / 2 + line[u][v].getStartY()-40);
         t[u][v].setFont(Font.font("verdana",FontWeight.EXTRA_BOLD,17));
         t[u][v].setFill(Color.LIGHTCORAL);
+        wrong[u][v] = imageView;
+        wrong[u][v].setX((line[u][v].getEndX() - line[u][v].getStartX()) / 2 + line[u][v].getStartX() -20);
+        wrong[u][v].setY((line[u][v].getEndY() - line[u][v].getStartY()) / 2 + line[u][v].getStartY() -10);
+        wrong[u][v].setVisible(false);
+
+
         double scale = 2.5;
         arrowHead[u][v] = new Polygon(-4.33 * scale, 2.5 * scale, 5.0 * scale, 0, -4.33 * scale, -2.5 * scale, -4.33 * scale, 2.5 * scale);
         arrowHead[u][v].setRotate(Math.toDegrees(arrowAngle));
@@ -135,6 +152,8 @@ public class Controller{
         root.getChildren().add(0, t[u][v]);
         root.getChildren().add(0, arrowHead[u][v]);
         root.getChildren().add(0, line[u][v]);
+        if(!root.getChildren().contains(wrong[u][v]))
+            root.getChildren().add(0, wrong[u][v]);
     }
 
     public void inputQuery(Vertex[] graph, Pane root){

@@ -1,5 +1,8 @@
 package sample;
 
+import javafx.scene.paint.Color;
+
+import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,7 +14,6 @@ public class Vertex implements Comparable<Vertex> {
     private Vertex predecessor;
     private int distance = Integer.MAX_VALUE;
     private int time = Integer.MAX_VALUE;
-
 
     public Vertex(String name) {
         this.name = name;
@@ -31,11 +33,16 @@ public class Vertex implements Comparable<Vertex> {
             if(synapse.getTargetVertex()==target && synapse.getStartVertex()==source){
                 //System.out.println("Pass one time, decrease lifetime");
                 synapse.decreaseLife();
+                String[] oldText = Controller.t[u][v].getText().split("\n");
+                String newText = oldText[0]+"\n"+oldText[1]+"\n"+"Life: "+synapse.getLife();
+                Controller.t[u][v].setText(newText);
                 if(synapse.getLife()<=0){
                     System.out.println("Node died");
-                    Controller.line[u][v].setVisible(false);
-                    Controller.t[u][v].setVisible(false);
-                    Controller.arrowHead[u][v].setVisible(false);
+//                    Controller.line[u][v].setVisible(false);
+//                    Controller.t[u][v].setVisible(false);
+//                    Controller.arrowHead[u][v].setVisible(false);
+                    Controller.wrong[u][v].setVisible(true);
+                    Controller.line[u][v].setStroke(Color.RED);
                     synapse.setTime(Integer.MIN_VALUE);//disabled the synapse
 
                 }
