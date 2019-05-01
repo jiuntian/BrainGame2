@@ -43,6 +43,7 @@ public class Vertex implements Comparable<Vertex> {
 //                    Controller.arrowHead[u][v].setVisible(false);
                     Controller.wrong[u][v].setVisible(true);
                     Controller.line[u][v].setStroke(Color.RED);
+                    Controller.arrowHead[u][v].setFill(Color.RED);
                     synapse.setTime(Integer.MIN_VALUE);//disabled the synapse
 
                 }

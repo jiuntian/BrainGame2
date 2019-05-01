@@ -23,7 +23,11 @@ public class Solution {
             System.out.println("Shortest Path: " + path);
 
             for(int i=1; i<path.size();i++){
-                path.get(i-1).decreaseSynapseLifetime(path.get(i-1),path.get(i),i-1,i);
+                path.get(i-1).decreaseSynapseLifetime(
+                        path.get(i-1)
+                        ,path.get(i)
+                        ,new Integer(path.get(i-1).getName())-1
+                        ,new Integer(path.get(i).getName())-1);
             }
 
             return shortestPath.getShortestPathTo(destination);

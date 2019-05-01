@@ -21,8 +21,6 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
-import java.io.FileInputStream;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -37,9 +35,6 @@ public class Controller{
     Text descriptionText;
     Text informationText;
 
-    Image image = new Image(this.getClass().getClassLoader().getResource("wrong.png").toString());
-    ImageView imageView = new ImageView(image);
-
     TextField textField;
     TextField textField2;
 
@@ -48,7 +43,7 @@ public class Controller{
 
         Label label1 = new Label("From:\t");
         textField = new TextField ();
-        textField.setMaxWidth(25);
+        textField.setMaxWidth(36);
         HBox from = new HBox();
         from.getChildren().addAll(label1, textField);
         from.setSpacing(10);
@@ -57,7 +52,7 @@ public class Controller{
 
         Label label2 = new Label("Dest:\t");
         textField2 = new TextField ();
-        textField2.setMaxWidth(25);
+        textField2.setMaxWidth(36);
         HBox to = new HBox();
         to.getChildren().addAll(label2, textField2);
         to.setSpacing(10);
@@ -159,6 +154,7 @@ public class Controller{
         line[u][v].setEndY(circleV.getCenterY());
         line[u][v].setStrokeWidth(3);
 
+        //text information
         t[u][v] = new Text(weight);
         double arrowAngle = (Math.atan2(line[u][v].getEndY() - line[u][v].getStartY(), line[u][v].getEndX() - line[u][v].getStartX()));
         int onLeft = (v>u)? -90 : 0;
@@ -166,12 +162,16 @@ public class Controller{
         t[u][v].setLayoutY((line[u][v].getEndY() - line[u][v].getStartY()) / 2 + line[u][v].getStartY()-40);
         t[u][v].setFont(Font.font("verdana",FontWeight.EXTRA_BOLD,17));
         t[u][v].setFill(Color.LIGHTCORAL);
+
+        //wrong icon
+        Image image = new Image(this.getClass().getClassLoader().getResource("wrong.png").toString());
+        ImageView imageView = new ImageView(image);
         wrong[u][v] = imageView;
         wrong[u][v].setX((line[u][v].getEndX() - line[u][v].getStartX()) / 2 + line[u][v].getStartX() -20);
         wrong[u][v].setY((line[u][v].getEndY() - line[u][v].getStartY()) / 2 + line[u][v].getStartY() -10);
         wrong[u][v].setVisible(false);
 
-
+        //arrow
         double scale = 2.5;
         arrowHead[u][v] = new Polygon(-4.33 * scale, 2.5 * scale, 5.0 * scale, 0, -4.33 * scale, -2.5 * scale, -4.33 * scale, 2.5 * scale);
         arrowHead[u][v].setRotate(Math.toDegrees(arrowAngle));
@@ -199,15 +199,17 @@ public class Controller{
 //        }
         singleQuery(graph);
     }
-    public void singleQuery(Vertex[] graph){
+    public void singleQuery(Vertex[] graph) {
 //        Scanner sc = new Scanner(System.in);
 //        System.out.println("Enter source and destination(s d):");
 //        int src = sc.nextInt()-1;
 //        int des = sc.nextInt()-1;
         //GUI input
-        if(!textField.getText().equals("")&&!textField2.getText().equals("")) {
-            int srcInput = new Integer(textField.getText());
-            int desInput = new Integer(textField2.getText());
+        String text1 = textField.getText();
+        String text2 = textField2.getText();
+        if(!text1.equals("")&&!text2.equals("")) {
+            int srcInput = new Integer(text1);
+            int desInput = new Integer(text2);
             int src = srcInput - 1;
             int des = desInput - 1;
             List<Vertex> path = new Solution().calc(graph[src], graph[des]);
