@@ -1,7 +1,6 @@
 package sample;
 
 import javafx.scene.control.TextInputDialog;
-import javafx.stage.Stage;
 
 import java.util.Optional;
 

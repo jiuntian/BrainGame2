@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Main extends Application {
-    static Vertex[] a;
 
     Map<Integer, Integer[][]> neuronToSynapses = new HashMap<>();
     @Override

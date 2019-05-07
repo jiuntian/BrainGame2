@@ -2,7 +2,6 @@ package sample;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 public class Solution {
     public List<Vertex> calc(Vertex source, Vertex destination){

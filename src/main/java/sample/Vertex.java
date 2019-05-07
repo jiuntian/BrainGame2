@@ -2,7 +2,6 @@ package sample;
 
 import javafx.scene.paint.Color;
 
-import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
