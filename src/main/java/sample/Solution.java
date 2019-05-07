@@ -13,11 +13,13 @@ public class Solution {
                     + " to "
                     + destination.getName()
                     + ": " + destination.getDistance());
+
             System.out.println("Minimum time from "
                     + source.getName()
                     + " to "
                     + destination.getName()
                     + ": " + destination.getTime());
+
             List<Vertex> path = shortestPath.getShortestPathTo(destination);
             System.out.println("Shortest Path: " + path);
 

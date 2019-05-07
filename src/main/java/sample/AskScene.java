@@ -18,6 +18,7 @@ public class AskScene {
         result.ifPresent(numberOfNeuron -> {
             resultInt = Integer.parseInt(numberOfNeuron);
         });
+
         System.out.println(resultInt);
         dialog.close();
         return resultInt;

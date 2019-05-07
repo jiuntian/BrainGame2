@@ -235,8 +235,10 @@ public class Controller{
                 text = "No Path Available";
             else
                 info = "Time Needed: " + path.get(path.size() - 1).getTime() + "\nDistance Travelled: " + path.get(path.size() - 1).getDistance();
+
+            //reset back to original color
             for (Circle circle : nodes) {
-                circle.setFill(Color.GRAY);//reset back to original color
+                circle.setFill(Color.GRAY);
             }
             descriptionText.setText(text);
             informationText.setText(info);

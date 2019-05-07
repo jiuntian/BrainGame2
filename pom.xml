@@ -8,8 +8,15 @@
     <artifactId>BrainGame</artifactId>
     <version>1.0-SNAPSHOT</version>
     <dependencies>
-
+        
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>jcenter</id>
+            <url>https://jcenter.bintray.com/</url>
+        </repository>
+    </repositories>
 
     <build>
         <plugins>
