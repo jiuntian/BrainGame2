@@ -5,17 +5,29 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Main extends Application {
     static Vertex[] a;
 
+    Map<Integer, Integer[][]> neuronToSynapses = new HashMap<>();
     @Override
     public void start(Stage primaryStage){
-        Pane root = new Pane();
-        Scene scene = new Scene(root, 800, 600);
-        root.setStyle("-fx-background-color: linear-gradient(to top, #fdfcfb, #e2d1c3)");
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        a = new Controller().init(root);
+        int neurons = AskScene.start();
+        for(int i=0;i<neurons;i++){
+            int synapseCount = AskSynapseNumber.start(i+1);
+            Integer[][] data = new Integer[synapseCount][4];
+
+            for(int j=0;j<synapseCount;j++){
+                AskSynapseDetail.start(j+1,primaryStage);
+                data[j] = AskSynapseDetail.synapseData;
+            }
+
+            neuronToSynapses.put(i, data);
+        }
+        System.out.println(neuronToSynapses);
+        MainScene.start(primaryStage, neuronToSynapses);
     }
 
     public static void main(String[] args) {

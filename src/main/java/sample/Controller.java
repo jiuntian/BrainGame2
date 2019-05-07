@@ -23,6 +23,7 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Controller{
@@ -38,9 +39,8 @@ public class Controller{
     TextField textField;
     TextField textField2;
 
-    public Vertex[] init(Pane root){
-        Vertex[] a = inputGraph(root);
-
+    public Vertex[] init(Pane root, Map<Integer, Integer[][]> neuronToSynapses){
+        Vertex[] a = inputGraph(root, neuronToSynapses);
         Label label1 = new Label("From:\t");
         textField = new TextField ();
         textField.setMaxWidth(36);
@@ -83,14 +83,15 @@ public class Controller{
         return a;
     }
 
-    private Vertex[] inputGraph(Pane root){
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Program Start...\nEnter number of neurons");
-        int n = sc.nextInt();//number of neuron
-        while(n<2){
-            System.out.println("Neurons must more than or equal to 2");
-            n = sc.nextInt();
-        }
+    private Vertex[] inputGraph(Pane root, Map<Integer, Integer[][]> neuronToSynapses){
+//        Scanner sc = new Scanner(System.in);
+//        System.out.println("Program Start...\nEnter number of neurons");
+//        int n = sc.nextInt();//number of neuron
+//        while(n<2){
+//            System.out.println("Neurons must more than or equal to 2");
+//            n = sc.nextInt();
+//        }
+        int n = neuronToSynapses.size();
 
         Vertex[] neuron = new Vertex[n];
         for (int i = 0; i < n; i++) {
@@ -119,22 +120,28 @@ public class Controller{
         }
 
         for(int i=0;i<n;i++){
-            System.out.println("Configuring Neuron "+(i+1));
-            System.out.print("Number of synapse(s): ");
-            int m = sc.nextInt();//number of edge
+            //System.out.println("Configuring Neuron "+(i+1));
+            Integer[][] currentNeuron = neuronToSynapses.get(i);
+            //System.out.print("Number of synapse(s): ");
+            //int m = sc.nextInt();//number of edge
+            int m = currentNeuron.length;
             for(int j=0;j<m;j++){
-                System.out.println("Edge no "+(j+1));
-                System.out.print("Next neuron: ");
-                int nextNeuron = sc.nextInt()-1;
-                System.out.print("Distance: ");
-                int dist = sc.nextInt();
-                System.out.print("Time needed: ");
-                int time = sc.nextInt();
-                int life = 100;//random number more than 10
-                while(life>10 || life<1) {
-                    System.out.println("Synapse Lifetime: ");
-                    life = sc.nextInt();
-                }
+//                System.out.println("Edge no "+(j+1));
+//                System.out.print("Next neuron: ");
+//                int nextNeuron = sc.nextInt()-1;
+                int nextNeuron = currentNeuron[j][0]-1;
+//                System.out.print("Distance: ");
+//                int dist = sc.nextInt();
+                int dist = currentNeuron[j][1];
+//                System.out.print("Time needed: ");
+//                int time = sc.nextInt();
+                int time = currentNeuron[j][2];
+//                int life = 100;//random number more than 10
+//                while(life>10 || life<1) {
+//                    System.out.println("Synapse Lifetime: ");
+//                    life = sc.nextInt();
+//                }
+                int life = currentNeuron[j][3];
                 neuron[i].addNeighbour(new Edge(dist, neuron[i],neuron[nextNeuron],time,life));
                 addEdge(root, i, nextNeuron,"Time: "+time+"\nDist: "+dist + "\nLife: "+life);
             }
