@@ -10,12 +10,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
-import javafx.scene.shape.Polygon;
+import javafx.scene.shape.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -26,7 +25,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Controller{
-    static Line[][] line;
+    //static Line[][] line;
+    static CubicCurve[][] line;
     static Polygon[][] arrowHead;
     static Text[][] t;
     static ImageView[][] wrong;
@@ -107,7 +107,8 @@ public class Controller{
             nodes.add(circle);
             root.getChildren().addAll(circle, text);
         }
-        line = new Line[neuron.length][neuron.length];
+        //line = new Line[neuron.length][neuron.length];
+        line = new CubicCurve[neuron.length][neuron.length];
         arrowHead = new Polygon[neuron.length][neuron.length];
         t = new Text[neuron.length][neuron.length];
         wrong = new ImageView[neuron.length][neuron.length];
@@ -149,16 +150,27 @@ public class Controller{
     }
 
     private void addEdge(Pane root, int u, int v, String weight){
-        line[u][v] = new Line();
+        //line[u][v] = new Line();
         Circle circleU, circleV;
         circleU = nodes.get(u);
         circleV = nodes.get(v);
 
+        line[u][v] = new CubicCurve();
+        int left = (v>u)? -15 : 15;
         line[u][v].setStartX(circleU.getCenterX());
         line[u][v].setStartY(circleU.getCenterY());
         line[u][v].setEndX(circleV.getCenterX());
         line[u][v].setEndY(circleV.getCenterY());
-        line[u][v].setStrokeWidth(3);
+        line[u][v].setControlX1( (circleU.getCenterX()+circleV.getCenterX()) /2 + left);
+        line[u][v].setControlY1((circleU.getCenterY()+circleV.getCenterY()) /2);
+        line[u][v].setControlX2( (circleU.getCenterX()+circleV.getCenterX()) /2 + left);
+        line[u][v].setControlY2((circleU.getCenterY()+circleV.getCenterY()) /2);
+
+        line[u][v].setStrokeWidth(2.5);
+        line[u][v].setFill(null);
+        line[u][v].setStroke(Color.BLACK);
+
+
 
         //text information
         t[u][v] = new Text(weight);
@@ -168,13 +180,17 @@ public class Controller{
         t[u][v].setLayoutY((line[u][v].getEndY() - line[u][v].getStartY()) / 2 + line[u][v].getStartY()-40);
         t[u][v].setFont(Font.font("verdana",FontWeight.EXTRA_BOLD,17));
         t[u][v].setFill(Color.LIGHTCORAL);
+        t[u][v].setVisible(false);
+
+
+
 
         //wrong icon
         Image image = new Image(this.getClass().getClassLoader().getResource("wrong.png").toString());
         ImageView imageView = new ImageView(image);
         wrong[u][v] = imageView;
-        wrong[u][v].setX((line[u][v].getEndX() - line[u][v].getStartX()) / 2 + line[u][v].getStartX() -20);
-        wrong[u][v].setY((line[u][v].getEndY() - line[u][v].getStartY()) / 2 + line[u][v].getStartY() -10);
+        wrong[u][v].setX((line[u][v].getEndX() - line[u][v].getStartX()) / 2 + line[u][v].getStartX());
+        wrong[u][v].setY((line[u][v].getEndY() - line[u][v].getStartY()) / 2 + line[u][v].getStartY());
         wrong[u][v].setVisible(false);
 
         //arrow
@@ -184,6 +200,32 @@ public class Controller{
         arrowHead[u][v].setLayoutX(line[u][v].getEndX() - 20 * Math.cos(arrowAngle));
         arrowHead[u][v].setLayoutY(line[u][v].getEndY() - 20 * Math.sin(arrowAngle));
         arrowHead[u][v].setFill(line[u][v].getStroke());
+
+        line[u][v].setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                t[u][v].setVisible(true);
+                line[u][v].setStroke(Color.ORANGE);
+                arrowHead[u][v].setFill(Color.ORANGE);
+            }
+        });
+
+        line[u][v].setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                t[u][v].setVisible(false);
+                if(wrong[u][v].isVisible()){
+                    line[u][v].setStroke(Color.RED);
+                    arrowHead[u][v].setFill(Color.RED);
+                }
+                else {
+                    line[u][v].setStroke(Color.BLACK);
+                    arrowHead[u][v].setFill(Color.BLACK);
+                }
+
+            }
+        });
+
         root.getChildren().add(0, t[u][v]);
         root.getChildren().add(0, arrowHead[u][v]);
         root.getChildren().add(0, line[u][v]);
