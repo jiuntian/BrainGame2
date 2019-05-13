@@ -1,4 +1,4 @@
-package sample;
+package braingame;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;

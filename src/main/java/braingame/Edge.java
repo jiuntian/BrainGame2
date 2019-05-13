@@ -1,4 +1,4 @@
-package sample;
+package braingame;
 
 public class Edge {
 

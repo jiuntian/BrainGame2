@@ -1,4 +1,4 @@
-package sample;
+package braingame;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

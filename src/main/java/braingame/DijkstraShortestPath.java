@@ -1,4 +1,4 @@
-package sample;
+package braingame;
 
 import java.util.ArrayList;
 import java.util.Collections;

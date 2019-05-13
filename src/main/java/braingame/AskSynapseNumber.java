@@ -1,4 +1,4 @@
-package sample;
+package braingame;
 
 import javafx.scene.control.TextInputDialog;
 
