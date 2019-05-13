@@ -30,19 +30,19 @@ public class Vertex implements Comparable<Vertex> {
     public void decreaseSynapseLifetime(Vertex source, Vertex target, int u, int v){
         for(Edge synapse: getNeighbour()){
             if(synapse.getTargetVertex()==target && synapse.getStartVertex()==source){
-                //System.out.println("Pass one time, decrease lifetime");
+                //decrement of life
                 synapse.decreaseLife();
                 String[] oldText = Controller.t[u][v].getText().split("\n");
                 String newText = oldText[0]+"\n"+oldText[1]+"\n"+"Life: "+synapse.getLife();
                 Controller.t[u][v].setText(newText);
                 if(synapse.getLife()<=0){
+                    //debug in console
                     System.out.println("Node died");
-//                    Controller.line[u][v].setVisible(false);
-//                    Controller.t[u][v].setVisible(false);
-//                    Controller.arrowHead[u][v].setVisible(false);
+                    //set the gui when synapse died
                     Controller.wrong[u][v].setVisible(true);
                     Controller.line[u][v].setStroke(Color.RED);
                     Controller.arrowHead[u][v].setFill(Color.RED);
+                    //let the time to be minimum when synapse died
                     synapse.setTime(Integer.MIN_VALUE);//disabled the synapse
 
                 }
@@ -54,16 +54,8 @@ public class Vertex implements Comparable<Vertex> {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public List<Edge> getAdjacenciesList() {
         return adjacenciesList;
-    }
-
-    public void setAdjacenciesList(List<Edge> adjacenciesList) {
-        this.adjacenciesList = adjacenciesList;
     }
 
     public boolean isVisited() {

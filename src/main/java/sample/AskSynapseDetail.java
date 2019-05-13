@@ -68,9 +68,7 @@ public class AskSynapseDetail {
 
         Optional<Integer[]> result = dialog.showAndWait();
 
-        result.ifPresent(dataArray -> {
-            System.out.println("Get input");
-        });
+        result.ifPresent(dataArray -> System.out.println("Get input"));
 
         return synapseData;
     }
