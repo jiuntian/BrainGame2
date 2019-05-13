@@ -12,12 +12,22 @@ import java.util.Optional;
 public class AskSynapseDetail {
     public static Integer[] synapseData;
 
+    /**
+     * Initiate the dialog
+     * @param index
+     * index of neuron currently input
+     * @param primaryStage
+     * primary stage is the Stage pass from Main class
+     * @return
+     */
     public static Integer[] start(int index, Stage primaryStage){
         synapseData = new Integer[4];
+        //initialise dialog
         Dialog<Integer[]> dialog = new Dialog<>();
         dialog.setTitle("Detail of Synapse "+index);
         dialog.setHeaderText("Please enter synapse details");
 
+        //create it as a grid pane
         GridPane pane = new GridPane();
         pane.setAlignment(Pos.CENTER);
         pane.setPadding(new Insets(11.5,12.5,13.5,14.5));
@@ -44,6 +54,7 @@ public class AskSynapseDetail {
 
         dialog.getDialogPane().setContent(pane);
 
+        //when submit button pressed, return the input and end this method
         dialog.setResultConverter(dialogButton -> {
             if(dialogButton == submitButtonType){
                 synapseData[0] = Integer.valueOf(destinationTextField.getText());

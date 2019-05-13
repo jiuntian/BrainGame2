@@ -7,6 +7,11 @@ import javafx.stage.Stage;
 import java.util.Map;
 
 public class MainScene {
+    /**
+     * Start main scene
+     * @param primaryStage
+     * @param neuronToSynapses
+     */
     public static void start(Stage primaryStage, Map<Integer, Integer[][]> neuronToSynapses){
         Pane root = new Pane();
         Scene scene = new Scene(root, 800, 600);

@@ -42,7 +42,11 @@ public class AskScene {
         return resultInt;
     }
 
-    //check if input is valid
+    /**
+     * Check if input is valid
+     * @param input
+     * @return
+     */
     public static boolean isInvalid(String input){
         if(StringUtils.isNumeric(input)) {
             int resultInt = Integer.parseInt(input);

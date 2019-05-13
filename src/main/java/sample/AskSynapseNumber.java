@@ -8,6 +8,11 @@ public class AskSynapseNumber {
 
     static int numberOfSynapse = 0;
 
+    /**
+     * Initiate a dialog to ask user how many synapse there
+     * @param index
+     * @return
+     */
     public static int start(int index) {
         TextInputDialog dialog = new TextInputDialog();
         dialog.setTitle("Number of synapse");
