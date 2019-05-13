@@ -9,6 +9,7 @@ import java.util.Map;
 
 public class Main extends Application {
 
+
     Map<Integer, Integer[][]> neuronToSynapses = new HashMap<>();
     @Override
     public void start(Stage primaryStage){
