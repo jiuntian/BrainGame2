@@ -39,7 +39,7 @@ public class Vertex implements Comparable<Vertex> {
                     //debug in console
                     System.out.println("Node died");
                     //set the gui when synapse died
-                    Controller.wrong[u][v].setVisible(true);
+                    //Controller.wrong[u][v].setVisible(true);//cancel the wrong icon, too ugly
                     Controller.line[u][v].setStroke(Color.RED);
                     Controller.arrowHead[u][v].setFill(Color.RED);
                     //let the time to be minimum when synapse died
