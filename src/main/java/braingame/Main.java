@@ -10,10 +10,11 @@ public class Main extends Application {
 
     //a key value pair to store all the neurons with their synapses
     Map<Integer, Integer[][]> neuronToSynapses = new HashMap<>();
+    public static int neurons;
     @Override
     public void start(Stage primaryStage){
         //start scene to ask number of neurons
-        int neurons = AskScene.start();
+        neurons = AskScene.start();
         //loop through each neurons
         for(int i=0;i<neurons;i++){
             //ask number of synapse

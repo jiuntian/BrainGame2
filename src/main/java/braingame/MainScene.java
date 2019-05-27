@@ -20,4 +20,6 @@ public class MainScene {
         primaryStage.show();
         new Controller().init(root, neuronToSynapses);
     }
+
+
 }

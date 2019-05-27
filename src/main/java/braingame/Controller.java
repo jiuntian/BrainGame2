@@ -35,12 +35,12 @@ public class Controller {
     ArrayList<Circle> nodes = new ArrayList<>();
 
     //initiate text label for javafx scene
-    Text descriptionText;
-    Text informationText;
+    static Text descriptionText = new Text();;
+    static Text informationText = new Text();;
 
     //text input field
-    TextField textField;
-    TextField textField2;
+    static TextField textField = new TextField();;
+    static TextField textField2  = new TextField();;
 
     /**
      * This method initialise the scene, being called by MainScene class to generate mainScene
@@ -61,7 +61,6 @@ public class Controller {
         //this is to get the Source from user
         //consist of one label and one textField
         Label label1 = new Label("From:\t");
-        textField = new TextField();
         textField.setMaxWidth(36);
         //put them in a Horizontal Box
         HBox from = new HBox();
@@ -75,7 +74,6 @@ public class Controller {
         //this is to get the Destination from user
         //consist of one label and one textField
         Label label2 = new Label("Dest:\t");
-        textField2 = new TextField();
         textField2.setMaxWidth(36);
         //put them in a Horizontal Box
         HBox to = new HBox();
@@ -100,7 +98,6 @@ public class Controller {
         });
 
         //this is Text that tell user information, ie: shortest path, path not found
-        descriptionText = new Text();
         descriptionText.setText("Click the button to start!");
         descriptionText.setFont(Font.font(18));
         descriptionText.setFill(Color.BLACK);
@@ -108,14 +105,26 @@ public class Controller {
         descriptionText.setY(40);
 
         //This is text that tell user about this path information, distance and time
-        informationText = new Text();
         informationText.setFont(Font.font(18));
         informationText.setFill(Color.BLACK);
         informationText.setX(20);
         informationText.setY(60);
 
+        //TODO ADD reset button
+        Button resetButton = new Button("Reset");
+        //set its location
+        resetButton.setLayoutY(280.0);
+        resetButton.setLayoutX(20);
+        //when this button is pressed, it will call inputQuery method
+        resetButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                resetAll(root, neuronToSynapses);
+            }
+        });
+
         //add all into root Pane, which is this method's input param
-        root.getChildren().addAll(button, from, to, descriptionText, informationText);
+        root.getChildren().addAll(button, from, to, descriptionText, informationText);//reset removed
     }
 
     /**
@@ -258,7 +267,6 @@ public class Controller {
         t[u][v].setFill(Color.LIGHTCORAL);
         t[u][v].setVisible(false);
 
-
         //wrong icon
         Image image = new Image(this.getClass().getClassLoader().getResource("wrong.png").toString());
         ImageView imageView = new ImageView(image);
@@ -311,6 +319,8 @@ public class Controller {
         root.getChildren().add(0, t[u][v]);
         root.getChildren().add(0, arrowHead[u][v]);
         root.getChildren().add(0, line[u][v]);
+
+        //remove wrong icon, too ugly
         if (!root.getChildren().contains(wrong[u][v]))
             root.getChildren().add(0, wrong[u][v]);
     }
@@ -368,5 +378,10 @@ public class Controller {
             vertex.setVisited(false);
             vertex.setPredecessor(null);
         }
+    }
+
+    public static void resetAll(Pane root, Map<Integer, Integer[][]> neuronToSynapses){
+        root.getChildren().removeAll();
+        new Controller().init(root, neuronToSynapses);
     }
 }
