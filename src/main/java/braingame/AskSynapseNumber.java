@@ -21,7 +21,7 @@ public class AskSynapseNumber {
         Optional<String> result = dialog.showAndWait();
 
         result.ifPresent(data -> {
-                numberOfSynapse = Integer.parseInt(data);
+            numberOfSynapse = Integer.parseInt(data);
         });
         System.out.println(numberOfSynapse);
         dialog.close();

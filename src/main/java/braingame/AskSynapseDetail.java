@@ -92,7 +92,7 @@ public class AskSynapseDetail {
         if(StringUtils.isNumeric(destination)&&StringUtils.isNumeric(lifetime)&&StringUtils.isNumeric(time)&&StringUtils.isNumeric(distance)){
             int dest = Integer.parseInt(destination);
             int life = Integer.parseInt(lifetime);
-            if(dest<=Main.neurons&&dest>=0 && life<=10&&life>=0)
+            if(dest<=Main.neurons&&dest>0 && life<=10&&life>=0)
                 return true;
         }
         return false;
